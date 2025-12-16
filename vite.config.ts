@@ -4,6 +4,7 @@ export default {
     root:  resolve(__dirname, 'src'),
     publicDir: resolve(__dirname, 'src', 'public'),
     build: {
-        outDir: '../dist'
+        outDir: '../docs'
     },
+    base: '/docs/'
 }
