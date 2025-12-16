@@ -56,7 +56,70 @@ h1, h2, h3, h4, h5, h6 {
 
 /********************************* UNIVERSAL *********************************/
 #app {
-    margin: 400px auto;
+    margin: 200px auto;
+}
+
+header {
+    position: sticky;
+    top: 0;
+
+    .container {
+        display: flex;
+        flex-direction: row;
+    }
+}
+
+#content {
+    display: flex;
+    flex-wrap: wrap;
+
+    #toc {
+        flex: 0.2 0 auto;
+    }
+
+    #gallery {
+        flex: 1 0 auto;
+        min-width: 300px;
+    }
+}
+
+/******************************** CONTAINERS *********************************/
+.container {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+@media (min-width:576px) {
+    .container {
+        max-width: 510px;
+        padding-right: 0;
+        padding-left: 0
+    }
+}
+
+@media (min-width:768px) {
+    .container {
+        max-width: 700px
+    }
+}
+
+@media (min-width:1024px) {
+    .container {
+        max-width: 950px
+    }
+}
+
+@media (min-width:1280px) {
+    .container {
+        max-width: 1200px
+    }
+}
+
+.flex-spacer {
+    flex: 1;
 }
 
 /*********************************** MODAL ***********************************/
@@ -129,12 +192,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /*********************************** LOGIN ***********************************/
-#login {
-    position: fixed;
-    right: 0;
-    top: 0;
-    z-index: 1;
-}
+
 
 /*********************************** DEBUG ***********************************/
 #app {
