@@ -70,6 +70,6 @@ import '../css/style.css'
 
     const posts: Post[] = []
 
-
+    console.log(users, posts)
 
 })()
