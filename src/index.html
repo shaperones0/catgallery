@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cat Gallery</title>
+    <title>Котогаллерея</title>
     <script type="module" src="/ts/main.ts"></script>
   </head>
   <body class="bg-gradient">
@@ -12,18 +12,20 @@
       <div class="bg-sliding"></div>
     </div>
     <header>
-      <div class="container">
-        <p>heaeder</p>
+      <div class="container f-wrap">
+        <a class="flex-centered-row t-no-link" href="#">
+          <img src="/favicon.ico" class="d-inline-block" height="30">
+          <p id="tTitle" class="m-auto">Котогаллерея</p>
+        </a>
         <div class="flex-spacer"></div>
-        <div id="login">
-          Login
+        <div>
+          <label for="inpUsername">Имя: </label>
+          <input type="text" name="username" id="inpUsername">
+          <button type="button" name="submit" id="btnUsername">Войти</button>
         </div>
       </div>
     </header>
     <main id="app">
-      <!-- floating: login form -->
-
-
       <div class="container">
         <div id="content">
           <!-- toc -->
