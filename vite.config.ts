@@ -6,5 +6,5 @@ export default {
     build: {
         outDir: '../docs'
     },
-    base: '/docs/'
+    base: '/catgallery/'
 }
