@@ -84,12 +84,30 @@ header {
     }
 }
 
-#tTitle {
-    display: none;
+/* title widget */
+.wd-title {
+    /* flex row */
+    display: flex;
+    justify-content: center;
+    text-align: center;
+    vertical-align: middle;
+
+    /* revert href */
+    color: inherit;
+    text-decoration: inherit;
+
+    img {
+        display: inline-block;
+    }
+
+    p {
+        display: none;
+        margin: auto;
+    }
 }
 
 @media (min-width:576px) {
-    #tTitle {
+    .wd-title p {
         display: initial;
     }
 }
@@ -138,10 +156,6 @@ header {
     flex: 1;
 }
 
-.d-inline-block {
-    display: inline-block;
-}
-
 .flex-centered-row {
     display: flex;
     justify-content: center;
@@ -152,15 +166,6 @@ header {
 .f-wrap {
     flex-wrap: wrap;
     gap: 10px;
-}
-
-.m-auto {
-    margin: auto;
-}
-
-.t-no-link {
-    color: inherit;
-    text-decoration: inherit;
 }
 
 /*********************************** MODAL ***********************************/
