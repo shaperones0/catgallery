@@ -3,12 +3,17 @@ import '../css/style.css'
 (() => {
     'use strict'
 
+    const inpLogin = document.getElementById('fLoginUsername') as HTMLInputElement
+    const btnLogin = document.getElementById('fLoginSubmit') as HTMLButtonElement
+
+    const divToc = document.getElementById('toc') as HTMLDivElement
+
     const catCounter = document.getElementById('catCounter') as HTMLElement
+    const fAdd = document.getElementById('fAdd') as HTMLFormElement
     const inpAddTitle = document.getElementById('fAddTitle') as HTMLInputElement
-    const inpAddCategory = document.getElementById('fAddCategory') as HTMLInputElement
     const inpAddUrl = document.getElementById('fAddUrl') as HTMLInputElement
     const btnAddSubmit = document.getElementById('fAddSubmit') as HTMLButtonElement
-    const cbAddClear = document.getElementById('fAddClear') as HTMLInputElement
+    // const cbAddClear = document.getElementById('fAddClear') as HTMLInputElement
     const inpSearch = document.getElementById('fSearch') as HTMLInputElement
 
     const divGallery = document.getElementById('gallery') as HTMLDivElement
@@ -18,8 +23,8 @@ import '../css/style.css'
 
     const mdl = document.getElementById('modal')!
     const mdlMsg = document.getElementById('mdlMsg')!
-    const mdlMsgTitle = mdlMsg.querySelector('.modal-title') as HTMLElement
-    const mdlMsgBody = mdlMsg.querySelector('.modal-body') as HTMLElement
+    const mdlMsgTitle = mdlMsg.querySelector('h3')!
+    const mdlMsgBody = mdlMsg.querySelector('p')!
 
     const mdlCard = document.getElementById('mdlCard')!
     const mdlCardTitle = mdlCard.querySelector('.modal-title') as HTMLElement
@@ -101,16 +106,32 @@ import '../css/style.css'
         },
     ]
 
-    let user: User | null = null;
+    let user: User | null = null
+    let selectedPost: Post | null = null
 
-    function hcForEach(col: HTMLCollection, cb: (el: HTMLElement) => any) {
+    const hcForEach = (col: HTMLCollection, cb: (el: HTMLElement) => any) => {
         for (let idx = 0; idx < col.length; idx++) {
             cb(col.item(idx) as HTMLElement)
         }
     }
 
+    const isFav = (post: Post): boolean => {
+        if (user === null) return false
+        return post.favBy.has(user.name)
+    }
+
+    const canDelete = (post: Post): boolean => {
+        if (user === null) return false
+        if (user.is_staff || user.is_admin) return true
+        return user.name === post.title
+    }
+
+    const canFav = (): boolean => {
+        return user !== null
+    }
+
     const postClick = (post: Post) => {
-        console.log("bruh")
+        selectedPost = post
         modalCard(post)
     }
 
@@ -127,15 +148,23 @@ import '../css/style.css'
 
     const modalMsg = (title: string, message: string) => {
         modalShow(mdlMsg.id)
+        mdlMsgTitle.innerText = title
+        mdlMsgBody.innerHTML = message
     }
 
     const modalCard = (post: Post) => {
         modalShow(mdlCard.id)
+        mdlCardImg.src = post.url
+        mdlCardTitle.innerText = post.title
+        btnMdlCardDelete.style.display = canDelete(post) ? 'initial' : 'none'
+        btnMdlCardFav.style.display = canFav() ? 'initial' : 'none'
+        btnMdlCardFav.innerText = isFav(post) ? 'Удалить из избранного' : 'В избранное'
     }
 
     const renderCategory = (categoryName: string): HTMLParagraphElement => {
         const frag = document.importNode(tmpCategory.content, true)
         const elCategoryTitle = frag.querySelector('p') as HTMLParagraphElement
+        elCategoryTitle.setAttribute('id', 'caT' + categoryName)
         elCategoryTitle.innerText = categoryName
         return elCategoryTitle
     }
@@ -178,7 +207,19 @@ import '../css/style.css'
 
         if (filter === '' && user !== null) {
             //gather favorites
+            const fav: Post[] = []
+            posts.forEach((post) => {
+                if (post.favBy.has(user!.name)) fav.push(post)
+            })
 
+            if (fav.length !== 0) {
+                //create fav cat
+                tblGallery.appendChild(renderCategory(`Избранное (${fav.length})`))
+                const elPosts = fav.map(renderPost)
+                layoutPosts(elPosts).forEach((row) => {
+                    tblGallery.appendChild(row)
+                })
+            }
         }
 
         let category2elems = new Map<string, Post[]>()
@@ -192,7 +233,7 @@ import '../css/style.css'
             }
             elems.push(post)
         })
-        category2elems = new Map([...category2elems.entries()].sort());
+        category2elems = new Map([...category2elems.entries()].sort())
 
         category2elems.forEach((cards, category) => {
             tblGallery.appendChild(renderCategory(category + ` (${cards.length})`))
@@ -202,7 +243,23 @@ import '../css/style.css'
             })
         })
 
+        // render cat counter
         catCounter.innerText = (posts.length === 0) ? '0 котов...' : posts.length + ' котов!'
+
+        // render form
+        fAdd.style.display = (user === null) ? 'none' : 'flex'
+
+        // render toc
+        divToc.innerHTML = 'Содержание'
+        category2elems.forEach((_, category) => {
+            const elP = document.createElement('p')
+            elP.innerText = category
+            elP.classList.add('toc-link')
+            elP.addEventListener('click', () => {
+                document.getElementById('caT' + category)!.scrollIntoView()
+            })
+            divToc.appendChild(elP)
+        })
     }
 
     const renderAdmin = () => {
@@ -218,6 +275,66 @@ import '../css/style.css'
             }
         }
     }
+
+    btnLogin.addEventListener('click', () => {
+        user = null
+        users.forEach((iUser) => {
+            if (iUser.name === inpLogin.value) {
+                user = iUser
+            }
+        })
+
+        render()
+    })
+
+    btnAddSubmit.addEventListener('click', () => {
+        const errs = new Array()
+        if (inpAddTitle.value === '') {
+            errs.push('<li>Название не указано</li>')
+        }
+        if (inpAddUrl.value === '') {
+            errs.push('<li>Ссылка не указана</li>')
+        }
+        if (errs.length !== 0) {
+            modalMsg('Ошибка', 'Форма заполнена неправильно<ul>' + errs.join('') + '</ul>')
+            return
+        }
+
+        if (user === null) return
+
+        posts.push({
+            title: inpAddTitle.value,
+            author: user.name,
+            url: inpAddUrl.value,
+            favBy: new Set()
+        })
+
+        render()
+
+        inpAddTitle.value = ''
+        inpAddUrl.value = ''
+    })
+
+    inpSearch.addEventListener('input', render)
+
+    mdl.addEventListener('click', (ev) => {if (ev.target === mdl) modalHide()})
+
+    btnMdlCardDelete.addEventListener('click', () => {
+        const idx = posts.indexOf(selectedPost!)
+        posts.splice(idx, 1)
+        modalHide()
+        render()
+    })
+
+    btnMdlCardFav.addEventListener('click', () => {
+        if (user === null) return
+        const fav = selectedPost!.favBy
+        if (fav.has(user.name)) fav.delete(user.name)
+        else fav.add(user.name)
+
+        modalCard(selectedPost!)
+        render()
+    })
 
     render()
 

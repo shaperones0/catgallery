@@ -19,9 +19,9 @@
         </a>
         <div class="flex-spacer"></div>
         <div>
-          <label for="inpUsername">Имя: </label>
-          <input type="text" name="username" id="inpUsername">
-          <button type="button" name="submit" id="btnUsername">Войти</button>
+          <label for="fLoginUsername">Имя: </label>
+          <input type="text" name="username" id="fLoginUsername">
+          <button type="button" name="submit" id="fLoginSubmit">Войти</button>
         </div>
       </div>
     </header>
@@ -37,14 +37,10 @@
           <div id="gallery">
             <div class="v-card">
               <h1 id="catCounter">0 котов...</h1>
-              <div class="form flex-justify ">
+              <div id="fAdd" class="form flex-justify ">
                 <div>
                   <label for="fAddTitle">Название</label><br>
                   <input type="text" id="fAddTitle" placeholder="имя кота">
-                </div>
-                <div>
-                  <label for="fAddCategory">Категория</label><br>
-                  <input type="text" id="fAddCategory" placeholder="пушистые">
                 </div>
                 <div>
                   <label for="fAddUrl">Ссылка</label><br>
@@ -62,8 +58,6 @@
                 <div>
                   <div>
                     <button type="button" id="fAddSubmit">Добавить</button>
-                    <input type="checkbox" value="" id="fAddClear">
-                    <label for="fAddClear">Очищать</label>
                   </div>
                 </div>
               </div>
@@ -108,7 +102,8 @@
     <div id="modal">
       <!-- modal message box -->
       <div class="modal" id="mdlMsg">
-        Modal msg
+        <h3>Modal title</h3>
+        <p>Modal description</p>
       </div>
 
       <!-- modal card -->
