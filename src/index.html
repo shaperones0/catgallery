@@ -35,7 +35,61 @@
 
           <!-- gallery -->
           <div id="gallery">
-            Gallery
+            <div class="v-card">
+              <h1 id="catCounter">0 котов...</h1>
+              <div class="form flex-justify ">
+                <div>
+                  <label for="fAddTitle">Название</label><br>
+                  <input type="text" id="fAddTitle" placeholder="имя кота">
+                </div>
+                <div>
+                  <label for="fAddCategory">Категория</label><br>
+                  <input type="text" id="fAddCategory" placeholder="пушистые">
+                </div>
+                <div>
+                  <label for="fAddUrl">Ссылка</label><br>
+                  <input type="text" list="fAddUrlOptions" id="fAddUrl" placeholder="cat0.jpg">
+                  <datalist id="fAddUrlOptions">
+                    <option value="cat0.jpg"></option>
+                    <option value="cat1.jpg"></option>
+                    <option value="cat2.jpg"></option>
+                    <option value="cat3.jpg"></option>
+                    <option value="cat4.jpg"></option>
+                    <option value="cat5.jpg"></option>
+                    <option value="cat6.jpg"></option>
+                  </datalist>
+                </div>
+                <div>
+                  <div>
+                    <button type="button" id="fAddSubmit">Добавить</button>
+                    <input type="checkbox" value="" id="fAddClear">
+                    <label for="fAddClear">Очищать</label>
+                  </div>
+                </div>
+              </div>
+              <div class="form">
+                <label for="fSearch">Поиск</label>
+                <input type="text" id="fSearch">
+              </div>
+            </div>
+            <table id="tblGallery">
+              <tbody>
+
+              </tbody>
+            </table>
+            <template id="tmpCard">
+              <div class="card">
+                <img height="200" src="/p.png">
+                <p>Title</p>
+              </div>
+            </template>
+            <template id="tmpCategory">
+              <tr>
+                <td colspan="3">
+                  <p class="card-category">Category title</p>
+                </td>
+              </tr>
+            </template>
           </div>
         </div>
 
@@ -59,7 +113,12 @@
 
       <!-- modal card -->
       <div class="modal" id="mdlCard">
-        Modal card
+        <h3 class="modal-title">Modal title</h3>
+        <img src="/p.png" alt="Картинка из галереи" id="mdlCardImg" class="mb-4" style="object-fit: contain;" width="400" height="500"><br>
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-danger" id="mdlCardDelete" data-bs-dismiss="modal">Удалить</button>
+          <button type="button" class="btn btn-warning" id="mdlCardFav">В избранное</button>
+        </div>
       </div>
     </div>
   </body>

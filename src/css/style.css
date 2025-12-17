@@ -75,13 +75,46 @@ header {
     flex-wrap: wrap;
 
     #toc {
-        flex: 0.2 0 auto;
+        flex: 0.5 0 auto;
     }
 
     #gallery {
         flex: 1 0 auto;
         min-width: 300px;
+
+        h1 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+        }
     }
+}
+
+.card {
+    margin-bottom: 20px;
+    text-align: center;
+    transition: box-shadow 0.3s ease, background-color 0.3s ease;
+
+    img {
+        object-fit: contain;
+        width: 200px;
+        height: 200px;
+        margin: 10px auto;
+    }
+}
+
+.card:hover {
+    box-shadow: 0 0 20px rgba(36, 36, 36, 0.5);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.card-category {
+    border-bottom: solid black 1px;
+    margin-bottom: 10px;
+    font-size: 24pt;
+    flex-basis: 100%;
 }
 
 /* title widget */
@@ -114,6 +147,11 @@ header {
 
 #inpUsername {
     width: 180px;
+}
+
+#fSearch {
+    width: 100%;
+    margin: 20px;
 }
 
 
@@ -168,6 +206,28 @@ header {
     gap: 10px;
 }
 
+.form {
+    display: flex;
+    /* flex-wrap: wrap; */
+    flex-direction: column;
+    padding: 10px;
+    align-items: center;
+}
+
+@media (min-width:1024px) {
+    .form {
+        flex-direction: row;
+    }
+}
+
+.flex-justify {
+    * {
+        flex: 1 0 auto;
+        text-align: center;
+        margin: 3px;
+    }
+}
+
 /*********************************** MODAL ***********************************/
 #modal {
     overflow: hidden;
@@ -189,9 +249,21 @@ header {
     display: none;
 }
 
+.modal {
+  background-color: rgba(255, 255, 255, 0.5);
+  padding: 15px;
+  border-radius: 5px;
+}
+
 /*****************************************************************************/
 /********************************** DESIGN ***********************************/
 /*****************************************************************************/
+
+.v-card {
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 5px;
+    padding: 30px;
+}
 
 /*********************************** FONTS ***********************************/
 body {
@@ -257,17 +329,6 @@ header {
 
 
 /*********************************** DEBUG ***********************************/
-#app {
-    background-color: rgba(255, 255, 255, 0.5);
-}
-
-#login {
-    background-color: rgba(255, 255, 0, 0.5);
-}
-
-#gallery {
-    background-color: rgba(255, 0, 255, 0.5);
-}
 
 #admin {
     background-color: rgba(255, 0, 0, 0.5);
