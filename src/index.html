@@ -90,8 +90,43 @@
 
         <!-- admin panel -->
         <div id="admin">
-          Admin
         </div>
+        <template id="tmpAdminTable">
+          <h2>Зона администратора</h2>
+          <table>
+            <thead>
+              <th>№</th>
+              <th>Имя</th>
+              <th>Аватарка</th>
+              <th>Админ?</th>
+              <th>Модератор?</th>
+              <th></th>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+        </template>
+        <template id="tmpAdminRow">
+          <tr>
+            <td>0</td>
+            <td>
+              <input type="text">
+            </td>
+            <td>
+              <input type="text">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <button type="button">Сохранить</button>
+            </td>
+          </tr>
+        </template>
       </div>
 
     </main>

@@ -16,10 +16,13 @@ import '../css/style.css'
     // const cbAddClear = document.getElementById('fAddClear') as HTMLInputElement
     const inpSearch = document.getElementById('fSearch') as HTMLInputElement
 
-    const divGallery = document.getElementById('gallery') as HTMLDivElement
     const tblGallery = (document.getElementById('tblGallery') as HTMLTableElement).querySelector('tbody') as HTMLTableSectionElement
     const tmpCard = document.getElementById('tmpCard') as HTMLTemplateElement
     const tmpCategory = document.getElementById('tmpCategory') as HTMLTemplateElement
+
+    const divAdmin = document.getElementById('admin') as HTMLDivElement
+    const tmpAdminTable = document.getElementById('tmpAdminTable') as HTMLTemplateElement
+    const tmpAdminRow = document.getElementById('tmpAdminRow') as HTMLTemplateElement
 
     const mdl = document.getElementById('modal')!
     const mdlMsg = document.getElementById('mdlMsg')!
@@ -99,7 +102,7 @@ import '../css/style.css'
 
     const posts: Post[] = [
         {
-            title: 'Мурзик',
+            title: 'Томас',
             author: 'admin',
             url: 'cat0.jpg',
             favBy: new Set(),
@@ -111,7 +114,7 @@ import '../css/style.css'
             favBy: new Set(),
         },
         {
-            title: 'Barsik',
+            title: 'Bar$ik',
             author: 'tux',
             url: 'cat2.jpg',
             favBy: new Set(),
@@ -135,7 +138,7 @@ import '../css/style.css'
             favBy: new Set(),
         },
         {
-            title: 'Томас',
+            title: 'Мурзик',
             author: 'tux',
             url: 'cat6.jpg',
             favBy: new Set(),
@@ -164,6 +167,11 @@ import '../css/style.css'
 
     const canFav = (): boolean => {
         return user !== null
+    }
+
+    const isAdmin = (): boolean => {
+        if (user === null) return false
+        return (user.is_staff)
     }
 
     const postClick = (post: Post) => {
@@ -319,12 +327,54 @@ import '../css/style.css'
     }
 
     const renderAdmin = () => {
+        divAdmin.innerHTML = ''
+        if (!isAdmin()) return;
 
+        const frag = document.importNode(tmpAdminTable.content, true)
+        const elTable = frag.querySelector('table') as HTMLTableElement
+        const elTbody = elTable.querySelector('tbody') as HTMLTableSectionElement
+        divAdmin.appendChild(frag)
+
+        users.forEach((user, idx) => {
+            const elRow = document.importNode(tmpAdminRow.content, true).querySelector('tr') as HTMLTableRowElement
+            const elsTd = elRow.querySelectorAll('td')
+
+            const elTdNumber = elsTd.item(0)
+            elTdNumber.innerText = idx.toString()
+
+            const elTdName = elsTd.item(1)
+            const inpName = elTdName.querySelector('input')!
+            inpName.value = user.name
+
+            const elTdUrl = elsTd.item(2)
+            const inpUrl = elTdUrl.querySelector('input')!
+            inpUrl.value = user.pfp_url
+
+            const elTdIsAdmin = elsTd.item(3)
+            const inpAdmin = elTdIsAdmin.querySelector('input')!
+            inpAdmin.checked = user.is_admin
+
+            const elTdIsModerator = elsTd.item(4)
+            const inpModerator = elTdIsModerator.querySelector('input')!
+            inpModerator.checked = user.is_staff
+
+            const elTdSubmit = elsTd.item(5)
+            const btnSubmit = elTdSubmit.querySelector('button')!
+            btnSubmit.addEventListener('click', () => {
+                user.name = inpName.value
+                user.pfp_url = inpUrl.value
+                user.is_admin = inpAdmin.checked
+                user.is_staff = inpModerator.checked
+                render()
+            })
+
+            elTbody.appendChild(elRow)
+        })
     }
 
     const render = () => {
         renderGallery()
-
+        renderAdmin()
         if (user !== null) {
             if (user.is_staff) {
                 renderAdmin()
