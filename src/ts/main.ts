@@ -99,9 +99,45 @@ import '../css/style.css'
 
     const posts: Post[] = [
         {
-            title: 'бело-серый',
+            title: 'Мурзик',
             author: 'admin',
             url: 'cat0.jpg',
+            favBy: new Set(),
+        },
+        {
+            title: 'Рыжик',
+            author: 'admin',
+            url: 'cat1.jpg',
+            favBy: new Set(),
+        },
+        {
+            title: 'Barsik',
+            author: 'tux',
+            url: 'cat2.jpg',
+            favBy: new Set(),
+        },
+        {
+            title: 'Сажа Печная',
+            author: 'tux',
+            url: 'cat3.jpg',
+            favBy: new Set(),
+        },
+        {
+            title: 'Молния',
+            author: 'lazaga',
+            url: 'cat4.jpg',
+            favBy: new Set(),
+        },
+        {
+            title: 'Черныш',
+            author: 'chernysh',
+            url: 'cat5.jpg',
+            favBy: new Set(),
+        },
+        {
+            title: 'Томас',
+            author: 'tux',
+            url: 'cat6.jpg',
             favBy: new Set(),
         },
     ]
@@ -123,7 +159,7 @@ import '../css/style.css'
     const canDelete = (post: Post): boolean => {
         if (user === null) return false
         if (user.is_staff || user.is_admin) return true
-        return user.name === post.title
+        return user.name === post.author
     }
 
     const canFav = (): boolean => {
@@ -161,12 +197,28 @@ import '../css/style.css'
         btnMdlCardFav.innerText = isFav(post) ? 'Удалить из избранного' : 'В избранное'
     }
 
-    const renderCategory = (categoryName: string): HTMLParagraphElement => {
+    const renderCategory = (categoryName: string, categorySize: number): HTMLTableRowElement => {
         const frag = document.importNode(tmpCategory.content, true)
-        const elCategoryTitle = frag.querySelector('p') as HTMLParagraphElement
-        elCategoryTitle.setAttribute('id', 'caT' + categoryName)
-        elCategoryTitle.innerText = categoryName
-        return elCategoryTitle
+        const el = frag.querySelector('tr') as HTMLTableRowElement
+        const elTd = el.querySelector('td') as HTMLTableCellElement
+        const elCategoryTitle = elTd.querySelector('a') as HTMLAnchorElement
+        const elCategoryImg = elTd.querySelector('img') as HTMLImageElement
+
+        let found: User | null = null
+        users.forEach((usr) => {
+            if (usr.name === categoryName) found = usr
+        })
+
+        if (found === null) {
+            elTd.removeChild(elCategoryImg)
+        }
+        else {
+            elCategoryImg.src = found.pfp_url
+            elCategoryTitle.setAttribute('id', 'caT' + found.name)
+        }
+
+        elCategoryTitle.innerText = `${categoryName} (${categorySize})`
+        return el
     }
 
     const renderPost = (post: Post): HTMLDivElement => {
@@ -214,7 +266,7 @@ import '../css/style.css'
 
             if (fav.length !== 0) {
                 //create fav cat
-                tblGallery.appendChild(renderCategory(`Избранное (${fav.length})`))
+                tblGallery.appendChild(renderCategory(`Избранное`, fav.length))
                 const elPosts = fav.map(renderPost)
                 layoutPosts(elPosts).forEach((row) => {
                     tblGallery.appendChild(row)
@@ -236,7 +288,7 @@ import '../css/style.css'
         category2elems = new Map([...category2elems.entries()].sort())
 
         category2elems.forEach((cards, category) => {
-            tblGallery.appendChild(renderCategory(category + ` (${cards.length})`))
+            tblGallery.appendChild(renderCategory(category, cards.length))
             const elPosts = cards.map(renderPost)
             layoutPosts(elPosts).forEach((row) => {
                 tblGallery.appendChild(row)
@@ -250,13 +302,17 @@ import '../css/style.css'
         fAdd.style.display = (user === null) ? 'none' : 'flex'
 
         // render toc
-        divToc.innerHTML = 'Содержание'
+        divToc.innerHTML = '<h2>Содержание</h2>'
         category2elems.forEach((_, category) => {
             const elP = document.createElement('p')
             elP.innerText = category
             elP.classList.add('toc-link')
             elP.addEventListener('click', () => {
-                document.getElementById('caT' + category)!.scrollIntoView()
+                document.getElementById('caT' + category)!.scrollIntoView(
+                    {
+                        block: 'center'
+                    }
+                )
             })
             divToc.appendChild(elP)
         })

@@ -130,6 +130,10 @@ header {
     margin-bottom: 10px;
     font-size: 24pt;
     flex-basis: 100%;
+
+    img {
+        display: inline-block;
+    }
 }
 
 /* title widget */
