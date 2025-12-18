@@ -74,6 +74,10 @@ header {
     }
 }
 
+footer {
+    padding: 10px;
+}
+
 #content {
     display: flex;
     flex-wrap: wrap;
@@ -108,6 +112,17 @@ header {
         table {
             width: 100%;
         }
+    }
+}
+
+@media (max-width:1024px) {
+    #content {
+        flex-direction: column;
+    }
+
+    #gallery tr {
+        display: flex;
+        flex-direction: column;
     }
 }
 
@@ -171,12 +186,13 @@ header {
     }
 }
 
-#inpUsername {
+#fLoginUsername {
     width: 180px;
 }
 
 #fSearch {
-    width: 100%;
+    max-width: 100%;
+    flex: 1;
     margin: 20px;
 }
 
@@ -286,6 +302,13 @@ header {
 
 #mdlCardImg {
     object-fit: contain;
+}
+
+@media (max-width:1024px) {
+    #modal img {
+        max-width: 128px;
+        max-height: 128px;
+    }
 }
 
 /*****************************************************************************/
