@@ -4,41 +4,157 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/icon" href="/catgallery/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Cat Gallery</title>
-    <script type="module" crossorigin src="/catgallery/assets/index-echYvt36.js"></script>
-    <link rel="stylesheet" crossorigin href="/catgallery/assets/index-_ikdUyY6.css">
+    <title>Котогаллерея</title>
+    <script type="module" crossorigin src="/catgallery/assets/index-CO57wb5O.js"></script>
+    <link rel="stylesheet" crossorigin href="/catgallery/assets/index-0gYFO-qn.css">
   </head>
   <body class="bg-gradient">
     <div class="bg-sliding-container">
       <div class="bg-sliding"></div>
     </div>
-
+    <header>
+      <div class="container f-wrap">
+        <a class="wd-title" href="#">
+          <img src="/catgallery/favicon.ico" class="d-inline-block" height="30">
+          <p id="tTitle" class="m-auto">Котогаллерея</p>
+        </a>
+        <div class="flex-spacer"></div>
+        <div>
+          <label for="fLoginUsername">Имя: </label>
+          <input type="text" name="username" id="fLoginUsername">
+          <button type="button" name="submit" id="fLoginSubmit">Войти</button>
+        </div>
+      </div>
+    </header>
     <main id="app">
-      <!-- login form (floating) -->
-      <div id="login">
-        Login
+      <div class="container">
+        <div id="content">
+          <!-- toc -->
+          <div id="toc">
+            Table of contents
+          </div>
+
+          <!-- gallery -->
+          <div id="gallery">
+            <div class="v-card">
+              <h1 id="catCounter">0 котов...</h1>
+              <div id="fAdd" class="form flex-justify ">
+                <div>
+                  <label for="fAddTitle">Название</label><br>
+                  <input type="text" id="fAddTitle" placeholder="имя кота">
+                </div>
+                <div>
+                  <label for="fAddUrl">Ссылка</label><br>
+                  <input type="text" list="fAddUrlOptions" id="fAddUrl" placeholder="cat0.jpg">
+                  <datalist id="fAddUrlOptions">
+                    <option value="cat0.jpg"></option>
+                    <option value="cat1.jpg"></option>
+                    <option value="cat2.jpg"></option>
+                    <option value="cat3.jpg"></option>
+                    <option value="cat4.jpg"></option>
+                    <option value="cat5.jpg"></option>
+                    <option value="cat6.jpg"></option>
+                  </datalist>
+                </div>
+                <div>
+                  <div>
+                    <button type="button" id="fAddSubmit">Добавить</button>
+                  </div>
+                </div>
+              </div>
+              <div class="form">
+                <label for="fSearch">Поиск</label>
+                <input type="text" id="fSearch">
+              </div>
+            </div>
+            <table id="tblGallery">
+              <tbody>
+
+              </tbody>
+            </table>
+            <template id="tmpCard">
+              <div class="card">
+                <img height="200" src="/catgallery/p.png">
+                <p>Title</p>
+              </div>
+            </template>
+            <template id="tmpCategory">
+              <tr>
+                <td colspan="3" class="card-category">
+                  <img height="30" src="/catgallery/p.png">
+                  <a>Category title</a>
+                </td>
+              </tr>
+            </template>
+          </div>
+        </div>
+
+        <!-- admin panel -->
+        <div id="admin">
+        </div>
+        <template id="tmpAdminTable">
+          <h2>Зона администратора</h2>
+          <table>
+            <thead>
+              <th>№</th>
+              <th>Имя</th>
+              <th>Кол-во постов</th>
+              <th>Аватарка</th>
+              <th>Админ?</th>
+              <th>Модератор?</th>
+              <th></th>
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+        </template>
+        <template id="tmpAdminRow">
+          <tr>
+            <td>0</td>
+            <td>
+              <input type="text">
+            </td>
+            <td>
+
+            </td>
+            <td>
+              <input type="text">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <input type="checkbox">
+            </td>
+            <td>
+              <button type="button">Сохранить</button>
+            </td>
+          </tr>
+        </template>
       </div>
 
-      <!-- gallery -->
-      <div id="gallery">
-        Gallery
-      </div>
-
-      <!-- admin panel -->
-      <div id="admin">
-        Admin
-      </div>
     </main>
-
+    <footer>
+      <div class="container">
+        (c)
+      </div>
+    </footer>
     <div id="modal">
       <!-- modal message box -->
       <div class="modal" id="mdlMsg">
-        Modal msg
+        <h3>Modal title</h3>
+        <p>Modal description</p>
       </div>
 
       <!-- modal card -->
       <div class="modal" id="mdlCard">
-        Modal card
+        <h3 class="modal-title">Modal title</h3>
+        <img src="/catgallery/p.png" alt="Картинка из галереи" id="mdlCardImg" class="mb-4" style="object-fit: contain;" width="400" height="500"><br>
+        <div class="d-flex justify-content-between">
+          <button type="button" class="btn btn-danger" id="mdlCardDelete" data-bs-dismiss="modal">Удалить</button>
+          <button type="button" class="btn btn-warning" id="mdlCardFav">В избранное</button>
+        </div>
       </div>
     </div>
   </body>

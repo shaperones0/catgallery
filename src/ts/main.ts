@@ -189,11 +189,6 @@ import '../css/style.css'
         return new Map([...author2elems.entries()].sort())
     }
 
-    const postClick = (post: Post) => {
-        selectedPost = post
-        modalCard(post)
-    }
-
     const modalHide = () => {
         mdl.classList.remove('show')
     }
