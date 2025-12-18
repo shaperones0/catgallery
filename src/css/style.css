@@ -176,6 +176,9 @@ header {
     margin: 20px;
 }
 
+.d-none {
+    display: none;
+}
 
 /******************************** CONTAINERS *********************************/
 .container {
