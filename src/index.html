@@ -14,7 +14,7 @@
     <header>
       <div class="container f-wrap">
         <a class="wd-title" href="#">
-          <img src="/favicon.ico" alt="Иконка котогаллереи" class="d-inline-block" height="30">
+          <img src="/favicon.ico" alt="Иконка котогаллереи" class="d-inline-block" height="30" loading="lazy">
           <p id="tTitle" class="m-auto">Котогаллерея</p>
         </a>
         <div class="flex-spacer"></div>
@@ -73,14 +73,14 @@
             </table>
             <template id="tmpCard">
               <div class="card">
-                <img height="200" src="/p.png" alt="котик">
+                <img height="200" src="/p.png" alt="котик" loading="lazy">
                 <p>Title</p>
               </div>
             </template>
             <template id="tmpCategory">
               <tr>
                 <td colspan="3" class="card-category">
-                  <img height="30" src="/p.png">
+                  <img height="30" src="/p.png" loading="lazy">
                   <a>Category title</a>
                 </td>
               </tr>
@@ -151,7 +151,7 @@
       <!-- modal card -->
       <div class="modal" id="mdlCard">
         <h3 class="modal-title">Modal title</h3>
-        <img src="/p.png" alt="Картинка из галереи" id="mdlCardImg" width="400" height="500"><br>
+        <img src="/p.png" alt="Картинка из галереи" id="mdlCardImg" width="400" height="500" loading="lazy"><br>
         <div class="d-flex justify-content-between">
           <button type="button" class="btn btn-danger" id="mdlCardDelete" data-bs-dismiss="modal">Удалить</button>
           <button type="button" class="btn btn-warning" id="mdlCardFav">В избранное</button>
