@@ -44,9 +44,9 @@ import '../css/style.css'
 
     type Post = {
         title: string,
-        author: string,
+        author: number,
         url: string,
-        favBy: Set<string>,
+        favBy: Set<number>,
     }
 
     const users: User[] = [
@@ -103,49 +103,49 @@ import '../css/style.css'
     const posts: Post[] = [
         {
             title: 'Томас',
-            author: 'admin',
+            author: 0,
             url: 'cat0.jpg',
             favBy: new Set(),
         },
         {
             title: 'Рыжик',
-            author: 'admin',
+            author: 0,
             url: 'cat1.jpg',
             favBy: new Set(),
         },
         {
             title: 'Bar$ik',
-            author: 'tux',
+            author: 7,
             url: 'cat2.jpg',
             favBy: new Set(),
         },
         {
             title: 'Сажа Печная',
-            author: 'tux',
+            author: 7,
             url: 'cat3.jpg',
             favBy: new Set(),
         },
         {
             title: 'Молния',
-            author: 'lazaga',
+            author: 3,
             url: 'cat4.jpg',
             favBy: new Set(),
         },
         {
             title: 'Черныш',
-            author: 'chernysh',
+            author: 2,
             url: 'cat5.jpg',
             favBy: new Set(),
         },
         {
             title: 'Мурзик',
-            author: 'tux',
+            author: 7,
             url: 'cat6.jpg',
             favBy: new Set(),
         },
     ]
 
-    let user: User | null = null
+    let uid: number | null = null
     let selectedPost: Post | null = null
 
     const hcForEach = (col: HTMLCollection, cb: (el: HTMLElement) => any) => {
@@ -155,23 +155,38 @@ import '../css/style.css'
     }
 
     const isFav = (post: Post): boolean => {
-        if (user === null) return false
-        return post.favBy.has(user.name)
+        if (uid === null) return false
+        return post.favBy.has(uid)
     }
 
     const canDelete = (post: Post): boolean => {
-        if (user === null) return false
-        if (user.is_staff || user.is_admin) return true
-        return user.name === post.author
+        if (uid === null) return false
+        if (users[uid].is_staff || users[uid].is_admin) return true
+        return uid === post.author
     }
 
     const canFav = (): boolean => {
-        return user !== null
+        return uid !== null
     }
 
     const isAdmin = (): boolean => {
-        if (user === null) return false
-        return (user.is_staff)
+        if (uid === null) return false
+        return (users[uid].is_staff)
+    }
+
+    const userMap = (filter: string): Map<number, Post[]> => {
+        const author2elems = new Map<number, Post[]>()
+        posts.forEach((post) => {
+            if (!post.title.includes(filter)) return
+
+            let elems = author2elems.get(post.author)
+            if (elems === undefined) {
+                elems = []
+                author2elems.set(post.author, elems)
+            }
+            elems.push(post)
+        })
+        return new Map([...author2elems.entries()].sort())
     }
 
     const postClick = (post: Post) => {
@@ -205,27 +220,28 @@ import '../css/style.css'
         btnMdlCardFav.innerText = isFav(post) ? 'Удалить из избранного' : 'В избранное'
     }
 
-    const renderCategory = (categoryName: string, categorySize: number): HTMLTableRowElement => {
+    const renderAuthor = (user: User, postNumber: number): HTMLTableRowElement => {
         const frag = document.importNode(tmpCategory.content, true)
         const el = frag.querySelector('tr') as HTMLTableRowElement
         const elTd = el.querySelector('td') as HTMLTableCellElement
         const elCategoryTitle = elTd.querySelector('a') as HTMLAnchorElement
         const elCategoryImg = elTd.querySelector('img') as HTMLImageElement
 
-        let found: User | null = null
-        users.forEach((usr) => {
-            if (usr.name === categoryName) found = usr
-        })
+        elCategoryImg.src = user.pfp_url
+        elCategoryTitle.setAttribute('id', 'caT' + user.name)
+        elCategoryTitle.innerText = `${user.name} (${postNumber})`
+        return el
+    }
 
-        if (found === null) {
-            elTd.removeChild(elCategoryImg)
-        }
-        else {
-            elCategoryImg.src = found.pfp_url
-            elCategoryTitle.setAttribute('id', 'caT' + found.name)
-        }
+    const renderCategory = (categoryName: string, postNumber: number): HTMLTableRowElement => {
+        const frag = document.importNode(tmpCategory.content, true)
+        const el = frag.querySelector('tr') as HTMLTableRowElement
+        const elTd = el.querySelector('td') as HTMLTableCellElement
+        const elCategoryTitle = elTd.querySelector('a') as HTMLAnchorElement
+        const elCategoryImg = elTd.querySelector('img') as HTMLImageElement
 
-        elCategoryTitle.innerText = `${categoryName} (${categorySize})`
+        elTd.removeChild(elCategoryImg)
+        elCategoryTitle.innerText = `${categoryName} (${postNumber})`
         return el
     }
 
@@ -236,7 +252,10 @@ import '../css/style.css'
         const elPostTitle = elPost.querySelector('p') as HTMLParagraphElement
         elPostImg.src = post.url
         elPostTitle.innerText = post.title
-        elPost.addEventListener('click', () => postClick(post))
+        elPost.addEventListener('click', () => {
+            selectedPost = post
+            modalCard(post)
+        })
         return elPost
     }
 
@@ -265,11 +284,11 @@ import '../css/style.css'
         tblGallery.innerHTML = ''
         const filter = inpSearch.value
 
-        if (filter === '' && user !== null) {
+        if (filter === '' && uid !== null) {
             //gather favorites
             const fav: Post[] = []
             posts.forEach((post) => {
-                if (post.favBy.has(user!.name)) fav.push(post)
+                if (post.favBy.has(uid!)) fav.push(post)
             })
 
             if (fav.length !== 0) {
@@ -282,21 +301,9 @@ import '../css/style.css'
             }
         }
 
-        let category2elems = new Map<string, Post[]>()
-        posts.forEach((post) => {
-            if (!post.title.includes(filter)) return
-
-            let elems = category2elems.get(post.author)
-            if (elems === undefined) {
-                elems = []
-                category2elems.set(post.author, elems)
-            }
-            elems.push(post)
-        })
-        category2elems = new Map([...category2elems.entries()].sort())
-
-        category2elems.forEach((cards, category) => {
-            tblGallery.appendChild(renderCategory(category, cards.length))
+        const author2elems = userMap(filter)
+        author2elems.forEach((cards, userId) => {
+            tblGallery.appendChild(renderAuthor(users[userId], cards.length))
             const elPosts = cards.map(renderPost)
             layoutPosts(elPosts).forEach((row) => {
                 tblGallery.appendChild(row)
@@ -307,16 +314,17 @@ import '../css/style.css'
         catCounter.innerText = (posts.length === 0) ? '0 котов...' : posts.length + ' котов!'
 
         // render form
-        fAdd.style.display = (user === null) ? 'none' : 'flex'
+        fAdd.style.display = (uid === null) ? 'none' : 'flex'
 
         // render toc
         divToc.innerHTML = '<h2>Содержание</h2>'
-        category2elems.forEach((_, category) => {
+        author2elems.forEach((_, userId) => {
             const elP = document.createElement('p')
-            elP.innerText = category
+            const name = users[userId].name
+            elP.innerText = name
             elP.classList.add('toc-link')
             elP.addEventListener('click', () => {
-                document.getElementById('caT' + category)!.scrollIntoView(
+                document.getElementById('caT' + name)!.scrollIntoView(
                     {
                         block: 'center'
                     }
@@ -329,6 +337,7 @@ import '../css/style.css'
     const renderAdmin = () => {
         divAdmin.innerHTML = ''
         if (!isAdmin()) return;
+        const author2elems = userMap('')
 
         const frag = document.importNode(tmpAdminTable.content, true)
         const elTable = frag.querySelector('table') as HTMLTableElement
@@ -346,19 +355,24 @@ import '../css/style.css'
             const inpName = elTdName.querySelector('input')!
             inpName.value = user.name
 
-            const elTdUrl = elsTd.item(2)
+            const elTdNum = elsTd.item(2)
+            const posts = author2elems.get(idx)
+            if (posts === undefined) elTdNum.innerText = '0'
+            else elTdNum.innerText = posts!.length.toString()
+
+            const elTdUrl = elsTd.item(3)
             const inpUrl = elTdUrl.querySelector('input')!
             inpUrl.value = user.pfp_url
 
-            const elTdIsAdmin = elsTd.item(3)
+            const elTdIsAdmin = elsTd.item(4)
             const inpAdmin = elTdIsAdmin.querySelector('input')!
             inpAdmin.checked = user.is_admin
 
-            const elTdIsModerator = elsTd.item(4)
+            const elTdIsModerator = elsTd.item(5)
             const inpModerator = elTdIsModerator.querySelector('input')!
             inpModerator.checked = user.is_staff
 
-            const elTdSubmit = elsTd.item(5)
+            const elTdSubmit = elsTd.item(6)
             const btnSubmit = elTdSubmit.querySelector('button')!
             btnSubmit.addEventListener('click', () => {
                 user.name = inpName.value
@@ -375,18 +389,13 @@ import '../css/style.css'
     const render = () => {
         renderGallery()
         renderAdmin()
-        if (user !== null) {
-            if (user.is_staff) {
-                renderAdmin()
-            }
-        }
     }
 
     btnLogin.addEventListener('click', () => {
-        user = null
-        users.forEach((iUser) => {
+        uid = null
+        users.forEach((iUser, idx) => {
             if (iUser.name === inpLogin.value) {
-                user = iUser
+                uid = idx
             }
         })
 
@@ -406,11 +415,11 @@ import '../css/style.css'
             return
         }
 
-        if (user === null) return
+        if (uid === null) return
 
         posts.push({
             title: inpAddTitle.value,
-            author: user.name,
+            author: uid,
             url: inpAddUrl.value,
             favBy: new Set()
         })
@@ -433,10 +442,10 @@ import '../css/style.css'
     })
 
     btnMdlCardFav.addEventListener('click', () => {
-        if (user === null) return
+        if (uid === null) return
         const fav = selectedPost!.favBy
-        if (fav.has(user.name)) fav.delete(user.name)
-        else fav.add(user.name)
+        if (fav.has(uid)) fav.delete(uid)
+        else fav.add(uid)
 
         modalCard(selectedPost!)
         render()
