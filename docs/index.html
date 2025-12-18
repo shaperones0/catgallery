@@ -1,12 +1,12 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/icon" href="/catgallery/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8">
+    <link rel="icon" type="image/icon" href="/catgallery/favicon.ico">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Котогаллерея</title>
-    <script type="module" crossorigin src="/catgallery/assets/index-CO57wb5O.js"></script>
-    <link rel="stylesheet" crossorigin href="/catgallery/assets/index-0gYFO-qn.css">
+    <script type="module" crossorigin src="/catgallery/assets/index-D6t_dw-S.js"></script>
+    <link rel="stylesheet" crossorigin href="/catgallery/assets/index-fRjxt4wW.css">
   </head>
   <body class="bg-gradient">
     <div class="bg-sliding-container">
@@ -15,7 +15,7 @@
     <header>
       <div class="container f-wrap">
         <a class="wd-title" href="#">
-          <img src="/catgallery/favicon.ico" class="d-inline-block" height="30">
+          <img src="/catgallery/favicon.ico" alt="Иконка котогаллереи" class="d-inline-block" height="30" loading="lazy">
           <p id="tTitle" class="m-auto">Котогаллерея</p>
         </a>
         <div class="flex-spacer"></div>
@@ -74,14 +74,14 @@
             </table>
             <template id="tmpCard">
               <div class="card">
-                <img height="200" src="/catgallery/p.png">
+                <img height="200" src="/catgallery/p.png" alt="котик" loading="lazy">
                 <p>Title</p>
               </div>
             </template>
             <template id="tmpCategory">
               <tr>
                 <td colspan="3" class="card-category">
-                  <img height="30" src="/catgallery/p.png">
+                  <img height="30" src="/catgallery/p.png" loading="lazy">
                   <a>Category title</a>
                 </td>
               </tr>
@@ -96,13 +96,15 @@
           <h2>Зона администратора</h2>
           <table>
             <thead>
-              <th>№</th>
-              <th>Имя</th>
-              <th>Кол-во постов</th>
-              <th>Аватарка</th>
-              <th>Админ?</th>
-              <th>Модератор?</th>
-              <th></th>
+              <tr>
+                <th>№</th>
+                <th>Имя</th>
+                <th>Кол-во постов</th>
+                <th>Аватарка</th>
+                <th>Админ?</th>
+                <th>Модератор?</th>
+                <th></th>
+              </tr>
             </thead>
             <tbody>
 
@@ -150,7 +152,7 @@
       <!-- modal card -->
       <div class="modal" id="mdlCard">
         <h3 class="modal-title">Modal title</h3>
-        <img src="/catgallery/p.png" alt="Картинка из галереи" id="mdlCardImg" class="mb-4" style="object-fit: contain;" width="400" height="500"><br>
+        <img src="/catgallery/p.png" alt="Картинка из галереи" id="mdlCardImg" width="400" height="500" loading="lazy"><br>
         <div class="d-flex justify-content-between">
           <button type="button" class="btn btn-danger" id="mdlCardDelete" data-bs-dismiss="modal">Удалить</button>
           <button type="button" class="btn btn-warning" id="mdlCardFav">В избранное</button>
