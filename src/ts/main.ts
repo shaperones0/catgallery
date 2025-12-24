@@ -49,104 +49,122 @@ import '../css/style.css'
         favBy: Set<number>,
     }
 
-    const users: User[] = [
+    const users = new Map<number, User>()
+    users.set(0,
         {
             name: 'admin',
             pfp_url: 'pfp-admin.jpg',
             is_staff: true,
             is_admin: true,
         },
-        {
-            name: 'belyash',
-            pfp_url: 'pfp-belyash.jpg',
-            is_staff: false,
-            is_admin: false,
-        },
-        {
-            name: 'chernysh',
-            pfp_url: 'pfp-chernysh.jpg',
-            is_staff: false,
-            is_admin: false,
-        },
-        {
-            name: 'lazaga',
-            pfp_url: 'pfp-lazaga.jpg',
-            is_staff: false,
-            is_admin: false,
-        },
-        {
-            name: 'liberty',
-            pfp_url: 'pfp-liberty.jpg',
-            is_staff: false,
-            is_admin: false,
-        },
-        {
-            name: 'lopouh',
-            pfp_url: 'pfp-lopouh.jpg',
-            is_staff: false,
-            is_admin: false,
-        },
-        {
-            name: 'smol',
-            pfp_url: 'pfp-smol.jpg',
-            is_staff: false,
-            is_admin: false,
-        },
-        {
-            name: 'tux',
-            pfp_url: 'pfp-tux.jpg',
-            is_staff: false,
-            is_admin: false,
-        },
-    ]
-
-    const posts: Post[] = [
-        {
-            title: 'Томас',
-            author: 0,
-            url: 'cat0.jpg',
-            favBy: new Set(),
-        },
-        {
-            title: 'Рыжик',
-            author: 0,
-            url: 'cat1.jpg',
-            favBy: new Set(),
-        },
-        {
-            title: 'Bar$ik',
-            author: 7,
-            url: 'cat2.jpg',
-            favBy: new Set(),
-        },
-        {
-            title: 'Сажа Печная',
-            author: 7,
-            url: 'cat3.jpg',
-            favBy: new Set(),
-        },
-        {
-            title: 'Молния',
-            author: 3,
-            url: 'cat4.jpg',
-            favBy: new Set(),
-        },
-        {
-            title: 'Черныш',
-            author: 2,
-            url: 'cat5.jpg',
-            favBy: new Set(),
-        },
-        {
-            title: 'Мурзик',
-            author: 7,
-            url: 'cat6.jpg',
-            favBy: new Set(),
-        },
-    ]
+    )
+    let userMaxId = 1
+    const posts: Post[] = []
 
     let uid: number | null = null
     let selectedPost: Post | null = null
+
+    const userAdd = (newUser: User) => {
+        users.set(userMaxId, newUser)
+        userMaxId++;
+    }
+
+    const dataTest = () => {
+        [
+
+            {
+                name: 'belyash',
+                pfp_url: 'pfp-belyash.jpg',
+                is_staff: false,
+                is_admin: false,
+            },
+            {
+                name: 'chernysh',
+                pfp_url: 'pfp-chernysh.jpg',
+                is_staff: false,
+                is_admin: false,
+            },
+            {
+                name: 'lazaga',
+                pfp_url: 'pfp-lazaga.jpg',
+                is_staff: false,
+                is_admin: false,
+            },
+            {
+                name: 'liberty',
+                pfp_url: 'pfp-liberty.jpg',
+                is_staff: false,
+                is_admin: false,
+            },
+            {
+                name: 'lopouh',
+                pfp_url: 'pfp-lopouh.jpg',
+                is_staff: false,
+                is_admin: false,
+            },
+            {
+                name: 'smol',
+                pfp_url: 'pfp-smol.jpg',
+                is_staff: false,
+                is_admin: false,
+            },
+            {
+                name: 'tux',
+                pfp_url: 'pfp-tux.jpg',
+                is_staff: false,
+                is_admin: false,
+            },
+        ].forEach((user) => {
+            userAdd(user)
+        });
+
+        [
+            {
+                title: 'Томас',
+                author: 0,
+                url: 'cat0.jpg',
+                favBy: new Set<number>(),
+            },
+            {
+                title: 'Рыжик',
+                author: 0,
+                url: 'cat1.jpg',
+                favBy: new Set<number>(),
+            },
+            {
+                title: 'Bar$ik',
+                author: 7,
+                url: 'cat2.jpg',
+                favBy: new Set<number>(),
+            },
+            {
+                title: 'Сажа Печная',
+                author: 7,
+                url: 'cat3.jpg',
+                favBy: new Set<number>(),
+            },
+            {
+                title: 'Молния',
+                author: 3,
+                url: 'cat4.jpg',
+                favBy: new Set<number>(),
+            },
+            {
+                title: 'Черныш',
+                author: 2,
+                url: 'cat5.jpg',
+                favBy: new Set<number>(),
+            },
+            {
+                title: 'Мурзик',
+                author: 7,
+                url: 'cat6.jpg',
+                favBy: new Set<number>(),
+            },
+        ].forEach((post) => {
+            posts.push(post)
+        })
+    }
 
     const hcForEach = (col: HTMLCollection, cb: (el: HTMLElement) => any) => {
         for (let idx = 0; idx < col.length; idx++) {
@@ -160,8 +178,9 @@ import '../css/style.css'
     }
 
     const canDelete = (post: Post): boolean => {
-        if (uid === null) return false
-        if (users[uid].is_staff || users[uid].is_admin) return true
+        const usr = uid === null ? undefined : users.get(uid)
+        if (usr === undefined) return false
+        if (usr.is_staff || usr.is_admin) return true
         return uid === post.author
     }
 
@@ -170,8 +189,9 @@ import '../css/style.css'
     }
 
     const isAdmin = (): boolean => {
-        if (uid === null) return false
-        return (users[uid].is_staff)
+        const usr = uid === null ? undefined : users.get(uid)
+        if (usr === undefined) return false
+        return (usr.is_staff)
     }
 
     const userMap = (filter: string): Map<number, Post[]> => {
@@ -276,6 +296,16 @@ import '../css/style.css'
     }
 
     const renderGallery = () => {
+        if (posts.length === 0) {
+            tblGallery.innerHTML = '<tbody><tr><td><button type="button" id="btnTestData">Добавить тестовые данные</button></td></tr></tbody>';
+            (document.getElementById('btnTestData') as HTMLButtonElement).addEventListener('click', () => {
+                dataTest()
+                render()
+            })
+            divToc.innerHTML = ''
+            fAdd.style.display = (uid === null) ? 'none' : 'flex'
+            return;
+        }
         tblGallery.innerHTML = ''
         const filter = inpSearch.value
 
@@ -298,7 +328,9 @@ import '../css/style.css'
 
         const author2elems = userMap(filter)
         author2elems.forEach((cards, userId) => {
-            tblGallery.appendChild(renderAuthor(users[userId], cards.length))
+            const usr = users.get(userId)
+            if (usr === undefined) return
+            tblGallery.appendChild(renderAuthor(usr, cards.length))
             const elPosts = cards.map(renderPost)
             layoutPosts(elPosts).forEach((row) => {
                 tblGallery.appendChild(row)
@@ -312,10 +344,12 @@ import '../css/style.css'
         fAdd.style.display = (uid === null) ? 'none' : 'flex'
 
         // render toc
-        divToc.innerHTML = '<h2>Содержание</h2>'
+        divToc.innerHTML = '<h2>Коллекции</h2>'
         author2elems.forEach((_, userId) => {
+            const usr = users.get(userId)
+            if (usr === undefined) return
             const elP = document.createElement('p')
-            const name = users[userId].name
+            const name = usr.name
             elP.innerText = name
             elP.classList.add('toc-link')
             elP.addEventListener('click', () => {
@@ -337,7 +371,54 @@ import '../css/style.css'
         const frag = document.importNode(tmpAdminTable.content, true)
         const elTable = frag.querySelector('table') as HTMLTableElement
         const elTbody = elTable.querySelector('tbody') as HTMLTableSectionElement
+        const buttons = frag.querySelectorAll('button')
+        const elBtnAdd = buttons.item(0)
+        const elBtnSave = buttons.item(1)
         divAdmin.appendChild(frag)
+
+        type AdminRow = {
+            user: User,
+            uid: number,
+            elName: HTMLInputElement,
+            elUrl: HTMLInputElement,
+            elIsAdmin: HTMLInputElement,
+            elIsStaff: HTMLInputElement,
+        }
+
+        const rows: AdminRow[] = []
+
+        elBtnAdd.addEventListener('click', () => {
+            userAdd({
+                name: '',
+                pfp_url: '',
+                is_admin: false,
+                is_staff: false
+            })
+
+            render()
+        })
+
+        const tblSave = () => {
+            const newUsers: User[] = []
+            rows.forEach((row) => {
+                newUsers[row.uid] = {
+                    name: row.elName.value,
+                    pfp_url: row.elUrl.value,
+                    is_admin: row.elIsAdmin.checked,
+                    is_staff: row.elIsStaff.checked
+                }
+            })
+            users.clear()
+            userMaxId = 0
+            newUsers.forEach((value, idx) => {
+                users.set(idx, value)
+                userMaxId = Math.max(userMaxId, idx)
+            })
+
+            render()
+        }
+
+        elBtnSave.addEventListener('click', tblSave)
 
         users.forEach((user, idx) => {
             const elRow = document.importNode(tmpAdminRow.content, true).querySelector('tr') as HTMLTableRowElement
@@ -370,29 +451,50 @@ import '../css/style.css'
             const elTdSubmit = elsTd.item(6)
             const btnSubmit = elTdSubmit.querySelector('button')!
             btnSubmit.addEventListener('click', () => {
-                user.name = inpName.value
-                user.pfp_url = inpUrl.value
-                user.is_admin = inpAdmin.checked
-                user.is_staff = inpModerator.checked
+                users.delete(idx)
+                // user.name = inpName.value
+                // user.pfp_url = inpUrl.value
+                // user.is_admin = inpAdmin.checked
+                // user.is_staff = inpModerator.checked
                 render()
             })
 
             elTbody.appendChild(elRow)
+            rows.push({
+                user: user,
+                uid: idx,
+                elName: inpName,
+                elUrl: inpUrl,
+                elIsAdmin: inpAdmin,
+                elIsStaff: inpModerator
+            })
         })
+
+
     }
 
     const render = () => {
+        const clearedPosts: Post[] = []
+        posts.forEach((post) => {
+            const author = users.get(post.author)
+            if (author !== undefined) clearedPosts.push(post)
+        })
+        posts.length = 0
+        clearedPosts.forEach((post) => posts.push(post))
+
         renderGallery()
         renderAdmin()
     }
 
     btnLogin.addEventListener('click', () => {
         uid = null
-        users.forEach((iUser, idx) => {
-            if (iUser.name === inpLogin.value) {
-                uid = idx
-            }
-        })
+        if (inpLogin.value !== '') {
+            users.forEach((iUser, idx) => {
+                if (iUser.name === inpLogin.value) {
+                    uid = idx
+                }
+            })
+        }
 
         render()
     })

@@ -196,6 +196,12 @@ footer {
     margin: 20px;
 }
 
+#tblGallery {
+    text-align: center;
+    margin-top: 50px;
+}
+
+
 .d-none {
     display: none;
 }
